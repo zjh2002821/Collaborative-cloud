@@ -43,7 +43,14 @@ public interface UserService extends IService<User> {
      * @param request
      * @return
      */
-    LoginUserVO getLoginUser(HttpServletRequest request);
+    User getLoginUser(HttpServletRequest request);
+    /**
+     * 获取脱敏的已登录用户信息
+     *
+     * @return
+     */
+    LoginUserVO getLoginUserVO(User user);
+
 
     /**
      * 用户注销（退出登录）
@@ -73,4 +80,13 @@ public interface UserService extends IService<User> {
      * @return
      */
     Wrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
+
+    /**
+     * 是否为管理员
+     *
+     * @param user
+     * @return
+     */
+    boolean isAdmin(User user);
+
 }

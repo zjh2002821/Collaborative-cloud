@@ -4,6 +4,7 @@ import com.zjh.annotation.AuthCheck;
 import com.zjh.exception.BusinessException;
 import com.zjh.exception.ErrorCode;
 import com.zjh.exception.ThrowUtils;
+import com.zjh.model.entity.User;
 import com.zjh.model.enums.UserRoleEnum;
 import com.zjh.model.vo.LoginUserVO;
 import com.zjh.service.UserService;
@@ -45,7 +46,7 @@ public class AuthInterceptor {
             //向下转型从 ServletRequestAttributes 对象中获取具体的 HttpServletRequest 对象
         HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
         //3.调用user业务方法获取登录用户信息,拿到该用户的角色枚举类型
-        LoginUserVO loginUser = userService.getLoginUser(request);
+        User loginUser = userService.getLoginUser(request);
         String userRoleValue = loginUser.getUserRole();
         UserRoleEnum userRoleEnum = UserRoleEnum.getEnumByValue(userRoleValue);
         //4.拿到注解中定义的枚举类型
