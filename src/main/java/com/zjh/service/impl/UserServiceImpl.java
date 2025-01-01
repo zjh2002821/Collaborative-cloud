@@ -100,18 +100,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     *
      * @param request
      * @return
      */
     @Override
-    public LoginUserVO getLoginUser(HttpServletRequest request) {
+    public User getLoginUser(HttpServletRequest request) {
         //1.获取session判断是否已经登录
         Object attribute = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
         User user = (User) attribute;
         ThrowUtils.throwIf(user == null || user.getId() == null,ErrorCode.NOT_LOGIN_ERROR);
-        //2.脱敏数据
-        return getLoginUserVO(user);
+        return user;
     }
 
     /**
@@ -171,7 +169,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param user
      * @return
      */
-    private static LoginUserVO getLoginUserVO(User user){
+    public LoginUserVO getLoginUserVO(User user){
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtil.copyProperties(user,loginUserVO);
         return loginUserVO;
@@ -206,6 +204,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return queryWrapper;
     }
 
+    /**
+     * 是否为管理员
+     * @param user
+     * @return
+     */
+    @Override
+    public boolean isAdmin(User user) {
+        return user != null && UserConstant.ADMIN_ROLE.equals(user.getUserRole());
+    }
 
 
 }

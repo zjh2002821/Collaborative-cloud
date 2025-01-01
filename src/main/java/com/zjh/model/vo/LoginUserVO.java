@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * @author zjh
  * @version 1.0
- * 返回客户端数据模型
+ * 登录信息视图
  */
 @Data
 public class LoginUserVO implements Serializable {

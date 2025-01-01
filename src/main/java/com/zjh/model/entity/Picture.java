@@ -1,9 +1,7 @@
-package generator.domain;
+package com.zjh.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
@@ -18,7 +16,7 @@ public class Picture implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)//切换自动生成id策略，使用长整型，防止爬虫
     private Long id;
 
     /**
@@ -94,7 +92,28 @@ public class Picture implements Serializable {
     /**
      * 是否删除
      */
+    @TableLogic
     private Integer isDelete;
+
+    /**
+     * 状态：0-待审核; 1-通过; 2-拒绝
+     */
+    private Integer reviewStatus;
+
+    /**
+     * 审核信息
+     */
+    private String reviewMessage;
+
+    /**
+     * 审核人 id
+     */
+    private Long reviewerId;
+
+    /**
+     * 审核时间
+     */
+    private Date reviewTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -69,8 +69,8 @@ public class UserController {
      */
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
-        LoginUserVO loginUser = userService.getLoginUser(request);
-        return ResultUtils.success(loginUser);
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(userService.getLoginUserVO(loginUser));
     }
 
     /**
@@ -78,7 +78,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @AuthCheck(mustRole = "admin")
+//    @AuthCheck(mustRole = "admin")
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request){
         boolean b = userService.userLogout(request);

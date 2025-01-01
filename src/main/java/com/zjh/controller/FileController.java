@@ -72,7 +72,7 @@ public class FileController {
      * @throws IOException
      */
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    @GetMapping("/test/upload")
+    @GetMapping("/test/download")
     public void testDownLoadFile(String filePath, HttpServletResponse response) throws IOException {
         COSObject object = null;
         try {
