@@ -1,16 +1,26 @@
 package com.zjh.manager;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
+import com.qcloud.cos.model.ciModel.persistence.ImageInfo;
 import com.qcloud.cos.model.ciModel.persistence.PicOperations;
 import com.zjh.config.CosClientConfig;
+import com.zjh.exception.BusinessException;
+import com.zjh.exception.ErrorCode;
+import com.zjh.model.dto.file.UploadPictureResult;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.Date;
 
 /**
  * @author zjh

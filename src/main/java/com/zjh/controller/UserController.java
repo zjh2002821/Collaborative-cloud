@@ -78,7 +78,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @AuthCheck(mustRole = "admin")
+//    @AuthCheck(mustRole = "admin")
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request){
         boolean b = userService.userLogout(request);

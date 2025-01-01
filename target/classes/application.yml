@@ -1,7 +1,7 @@
 server:
   port: 8081
   servlet:
-    context-path: /zjh
+    context-path: /api
 
 spring:
   application:
@@ -11,6 +11,10 @@ spring:
     url: jdbc:mysql://localhost:3306/collaborative_cloud
     username: root
     password: root
+  # 开放更大的文件上传体积
+  servlet:
+    multipart:
+      max-file-size: 10MB
 
 # mybatis-plus配置
 mybatis-plus:
