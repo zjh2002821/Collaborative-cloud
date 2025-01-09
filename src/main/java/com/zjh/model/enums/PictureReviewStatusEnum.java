@@ -2,7 +2,11 @@ package com.zjh.model.enums;
 
 import cn.hutool.core.util.ObjUtil;
 import lombok.Getter;
-
+/**
+ * @author zjh
+ * @version 1.0
+ * 图片状态枚举
+ */
 @Getter
 public enum PictureReviewStatusEnum {  
     REVIEWING("待审核", 0),  

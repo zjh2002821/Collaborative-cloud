@@ -2,17 +2,17 @@ package com.zjh.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zjh.model.dto.picture.PictureQueryRequest;
-import com.zjh.model.dto.picture.PictureReviewRequest;
-import com.zjh.model.dto.picture.PictureUploadByBatchRequest;
-import com.zjh.model.dto.picture.PictureUploadRequest;
+import com.zjh.api.aliyunai.model.CreateOutPaintingTaskResponse;
+import com.zjh.model.dto.picture.*;
 import com.zjh.model.entity.Picture;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zjh.model.entity.User;
 import com.zjh.model.vo.PictureVO;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author zjh20
@@ -28,6 +28,35 @@ public interface PictureService extends IService<Picture> {
      * @return PictureVO 返回图片信息视图
      */
     PictureVO uploadPicture(Object inputSource, PictureUploadRequest pictureUploadRequest, User loginUser);
+
+    /**
+     * 删除图片
+     * @param pictureId
+     * @param loginUser
+     */
+    void deletePicture(long pictureId, User loginUser);
+
+    /**
+     * 编辑图片
+     * @param pictureEditRequest
+     * @param loginUser
+     */
+    void editPicture(PictureEditRequest pictureEditRequest, User loginUser);
+
+    /**
+     * 批量更新图片标签和分类
+     * @param pictureEditByBatchRequest
+     * @param loginUser
+     */
+    void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser);
+
+    /**
+     * 创建扩图任务
+     * @param createPictureOutPaintingTaskRequest
+     * @param loginUser
+     * @return
+     */
+    CreateOutPaintingTaskResponse createPictureOutPaintingTask(CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser);
 
     /**
      * 获取图片封装类（单条）
@@ -46,10 +75,26 @@ public interface PictureService extends IService<Picture> {
     Page<PictureVO> getPictureVOPage(Page<Picture> picturePage, HttpServletRequest request);
 
     /**
+     * 根据颜色搜索图片
+     * @param spaceId
+     * @param picColor
+     * @param loginUser
+     * @return
+     */
+    List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginUser);
+
+    /**
      * 校验图片信息
      * @param picture
      */
     void validPicture(Picture picture);
+
+    /**
+     * 校验权限
+     * @param loginUser
+     * @param picture
+     */
+    void checkPictureAuth(User loginUser, Picture picture);
 
     /**
      * 分页查询，按照pictureQueryRequest参数作为查询条件拼接
@@ -87,4 +132,10 @@ public interface PictureService extends IService<Picture> {
             User loginUser
     );
 
+
+    /**
+     * 清除该图片的cos存储
+     * @param oldPicture
+     */
+    void clearPictureFile(Picture oldPicture);
 }

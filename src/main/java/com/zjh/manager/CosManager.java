@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.qcloud.cos.COSClient;
+import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.PutObjectRequest;
@@ -20,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author zjh
@@ -72,10 +75,37 @@ public class CosManager {
         PicOperations picOperations = new PicOperations();
         // 1 表示返回原图信息
         picOperations.setIsPicInfo(1);
+        List<PicOperations.Rule> rules = new ArrayList<>();
+        //设置图片压缩规则1（转成webp格式）
+        PicOperations.Rule compressRule = new PicOperations.Rule();
+        String webpKey = FileUtil.mainName(key)+".webp";
+        compressRule.setRule("imageMogr2/format/webp");
+        compressRule.setBucket(cosClientConfig.getBucket());
+        compressRule.setFileId(webpKey);
+        rules.add(compressRule);
+        //设置缩略图规则2,只有图片大小超过20k才进行缩略
+        if (file.length() > 20 *1024){
+            PicOperations.Rule thumbnailRule = new PicOperations.Rule();
+            thumbnailRule.setRule(String.format("imageMogr2/thumbnail/%sx%s",256,256));
+            thumbnailRule.setBucket(cosClientConfig.getBucket());
+            thumbnailRule.setFileId(FileUtil.mainName(key)+"_thumbnail."+FileUtil.getSuffix(key));
+            rules.add(thumbnailRule);
+        }
         // 构造处理参数
+        picOperations.setRules(rules);
         putObjectRequest.setPicOperations(picOperations);
         return cosClient.putObject(putObjectRequest);
     }
+
+    /**
+     * 删除对象
+     *
+     * @param key 文件 key
+     */
+    public void deleteObject(String key) throws CosClientException {
+        cosClient.deleteObject(cosClientConfig.getBucket(), key);
+    }
+
 
 
 }

@@ -2,19 +2,39 @@ server:
   port: 8081
   servlet:
     context-path: /api
+    session:
+      cookie:
+        max-age: 2592000
 
 spring:
+  #session配置
+  session:
+    store-type: redis
+    #30天后过期
+    timeout: 2592000
+
   application:
     name: collaborative-cloud
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/collaborative_cloud
     username: root
     password: root
+     # Redis 配置
+    redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      timeout: 5000
+
   # 开放更大的文件上传体积
   servlet:
     multipart:
       max-file-size: 10MB
+  # 加载本地环境的yml文件
+  profiles:
+    active: local
 
 # mybatis-plus配置
 mybatis-plus:
@@ -48,3 +68,7 @@ knife4j:
 #    secretKey: xxx
 #    region: xxx
 #    bucket: xxx
+
+# 阿里云 AI 配置
+#aliYunAi:
+#  apiKey:

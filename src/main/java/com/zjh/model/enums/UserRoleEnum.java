@@ -8,6 +8,7 @@ import java.util.HashMap;
 /**
  * @author zjh
  * @version 1.0
+ * 用户角色枚举
  */
 @Getter
 public enum UserRoleEnum {
