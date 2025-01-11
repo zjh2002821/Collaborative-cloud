@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
@@ -227,6 +226,19 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
         // 排序
         queryWrapper.orderBy(StrUtil.isNotEmpty(sortField), sortOrder.equals("ascend"), sortField);
         return queryWrapper;
+    }
+
+    /**
+     * 校验该空间是否为本人或管理员操作
+     * @param space
+     * @param loginUser
+     */
+    @Override
+    public void checkSpaceAuth(Space space, User loginUser){
+        // 仅本人或管理员可删除
+        if (!space.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
     }
 
 }

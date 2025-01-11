@@ -48,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author zjh
  * @version 1.0
+ * 图片接口
  */
 @RestController
 @RequestMapping("/picture")
