@@ -58,7 +58,7 @@ spring:
             type: CLASS_BASED
             props:
               strategy: standard
-              algorithmClassName: com.zjh.manager.sharding.PictureShardingAlgorithm
+              algorithmClassName: com.zjh.shared.sharding.PictureShardingAlgorithm
     props:
       sql-show: true
 # mybatis-plus配置
@@ -84,7 +84,7 @@ knife4j:
         group-name: "默认分组"
         api-rule: package
         api-rule-resources:
-          - com.zjh.controller
+          - com.zjh.interfaces.controller
 # 对象存储配置（需要从腾讯云获取）
 #cos:
 #  client:

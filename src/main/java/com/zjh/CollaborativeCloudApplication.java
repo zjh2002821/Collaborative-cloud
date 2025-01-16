@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication(exclude = {ShardingSphereAutoConfiguration.class})
 @EnableAsync
-@MapperScan("com.zjh.mapper")
+@MapperScan("com.zjh.infrastructure.mapper")
 @ComponentScan("com.zjh.*")
 @EnableAspectJAutoProxy(exposeProxy = true)//开启aop代理
 public class CollaborativeCloudApplication {
