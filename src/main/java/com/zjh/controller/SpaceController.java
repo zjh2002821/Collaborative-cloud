@@ -13,6 +13,7 @@ import com.zjh.constant.UserConstant;
 import com.zjh.exception.BusinessException;
 import com.zjh.exception.ErrorCode;
 import com.zjh.exception.ThrowUtils;
+import com.zjh.manager.auth.SpaceUserAuthManager;
 import com.zjh.model.dto.picture.*;
 import com.zjh.model.dto.space.*;
 import com.zjh.model.entity.Picture;
@@ -53,6 +54,8 @@ public class SpaceController {
     private UserService userService;
     @Resource
     private SpaceService spaceService;
+    @Resource
+    private SpaceUserAuthManager spaceUserAuthManager;
 
     /**
      * 创建空间
@@ -137,11 +140,16 @@ public class SpaceController {
     public BaseResponse<SpaceVO> getSpaceVOById(long id, HttpServletRequest request) {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
-        Space Space = spaceService.getById(id);
-        ThrowUtils.throwIf(Space == null, ErrorCode.NOT_FOUND_ERROR);
+        Space space = spaceService.getById(id);
+        ThrowUtils.throwIf(space == null, ErrorCode.NOT_FOUND_ERROR);
+        SpaceVO spaceVO = spaceService.getSpaceVO(space, request);
+        User loginUser = userService.getLoginUser(request);
+        List<String> permissionList = spaceUserAuthManager.getPermissionList(space, loginUser);
+        spaceVO.setPermissionList(permissionList);
         // 获取封装类
-        return ResultUtils.success(spaceService.getSpaceVO(Space, request));
+        return ResultUtils.success(spaceVO);
     }
+
 
     /**
      * 分页获取图片列表（仅管理员可用）

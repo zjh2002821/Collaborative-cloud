@@ -1,5 +1,7 @@
 package com.zjh.exception;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
 import com.zjh.common.BaseResponse;
 import com.zjh.common.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice//定义请求环绕切面
 @Slf4j
 public class GlobalExceptionHandler {
+    @ExceptionHandler(NotLoginException.class)
+    public BaseResponse<?> notLoginException(NotLoginException e) {
+        log.error("NotLoginException", e);
+        return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(NotPermissionException.class)
+    public BaseResponse<?> notPermissionExceptionHandler(NotPermissionException e) {
+        log.error("NotPermissionException", e);
+        return ResultUtils.error(ErrorCode.NO_AUTH_ERROR, e.getMessage());
+    }
+
     //处理业务异常返回
     @ExceptionHandler(BusinessException.class)
     public BaseResponse<?> businessExceptionHandler(BusinessException businessException){

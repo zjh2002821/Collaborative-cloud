@@ -93,9 +93,9 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture> impl
             Space space = spaceService.getById(spaceId);
             ThrowUtils.throwIf(ObjUtil.isNull(space),"空间不存在！",ErrorCode.PARAMS_ERROR);
             //校验是否具有该空间权限，只有创建该空间的人才可以上传
-            if (!loginUser.getId().equals(space.getUserId())){
-                throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"没有该空间权限！");
-            }
+//            if (!loginUser.getId().equals(space.getUserId())){
+//                throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"没有该空间权限！");
+//            }
             if (space.getTotalCount() >= space.getMaxCount()){
                 throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"空间条数不足！");
             }
@@ -114,9 +114,9 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture> impl
             Picture oldPicture = this.getById(pictureId);
             ThrowUtils.throwIf(oldPicture == null,"图片不存在！",ErrorCode.NOT_FOUND_ERROR);
             //设置更新图片仅允许本人或者管理员才可以修改
-            if (!loginUser.getId().equals(oldPicture.getUserId()) && !loginUser.getUserRole().equals(UserConstant.ADMIN_ROLE)){
-                throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-            }
+//            if (!loginUser.getId().equals(oldPicture.getUserId()) && !loginUser.getUserRole().equals(UserConstant.ADMIN_ROLE)){
+//                throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+//            }
             //校验空间是否一致，没有传spaceid则复用原有图片的spaceid
             if (spaceId == null){
                 if (oldPicture.getSpaceId() != null){
@@ -204,18 +204,16 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture> impl
         // 判断是否存在
         Picture oldPicture = this.getById(pictureId);
         ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
-        // 校验权限
-        this.checkPictureAuth(loginUser,oldPicture);
         // 操作数据库
-        // 校验权限
-        checkPictureAuth(loginUser, oldPicture);
+        // 校验权限，已改为使用注解鉴权
+//        checkPictureAuth(loginUser, oldPicture);
         // 开启事务
         transactionTemplate.execute(status -> {
             // 操作数据库
             boolean result = this.removeById(pictureId);
             ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
             // 释放额度
-            Long spaceId = Long.valueOf(oldPicture.getSpaceId());
+            Long spaceId = oldPicture.getSpaceId();
             if (spaceId != null){
                 boolean update = spaceService.lambdaUpdate()
                         .eq(Space::getId, spaceId)
@@ -252,8 +250,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture> impl
         long id = pictureEditRequest.getId();
         Picture oldPicture = this.getById(id);
         ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
-        // 校验权限
-        this.checkPictureAuth(loginUser,oldPicture);
+        // 校验权限，已改为使用注解鉴权
+//        this.checkPictureAuth(loginUser,oldPicture);
         // 操作数据库
         boolean result = this.updateById(picture);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -317,8 +315,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture> impl
         Long pictureId = createPictureOutPaintingTaskRequest.getPictureId();
         Picture picture = Optional.ofNullable(this.getById(pictureId))
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ERROR));
-        // 权限校验
-        checkPictureAuth(loginUser, picture);
+        // 校验权限，已改为使用注解鉴权
+//        checkPictureAuth(loginUser, picture);
         // 构造请求参数
         CreateOutPaintingTaskRequest taskRequest = new CreateOutPaintingTaskRequest();
         CreateOutPaintingTaskRequest.Input input = new CreateOutPaintingTaskRequest.Input();
@@ -424,10 +422,9 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture> impl
                 .limit(12)
                 .collect(Collectors.toList());
         //6.转换为vo类
-        List<PictureVO> pictureVOList = sortedPictures.stream()
+        return sortedPictures.stream()
                 .map(PictureVO::objToVo)
                 .collect(Collectors.toList());
-        return pictureVOList;
 
     }
 

@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zjh.manager.auth.StpKit;
 import com.zjh.constant.UserConstant;
 import com.zjh.exception.BusinessException;
 import com.zjh.exception.ErrorCode;
@@ -92,10 +93,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //4.用户不存在
         if (user == null){
             log.info("Check user is null");
-            ThrowUtils.throwIf(user == null,"该用户不存在或密码错误",ErrorCode.PARAMS_ERROR);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "该用户不存在或密码错误");
         }
         //5.记录用户登录态
         request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE,user);
+        //记录用户登录态到sa-token，便于空间权限校验使用
+        StpKit.SPACE.login(user.getId());
+        StpKit.SPACE.getSession().set(UserConstant.USER_LOGIN_STATE,user);
         return getLoginUserVO(user);
     }
 

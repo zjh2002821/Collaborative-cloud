@@ -4,6 +4,8 @@ import cn.hutool.json.JSONUtil;
 import com.zjh.model.entity.Picture;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.io.Serializable;
 import java.util.List;
@@ -111,6 +113,11 @@ public class PictureVO implements Serializable {
      * 图片主色调
      */
     private String picColor;
+
+    /**
+     * 权限列表
+     */
+    private List<String> permissionList = new ArrayList<>();
 
     private static final long serialVersionUID = 1L;  
   

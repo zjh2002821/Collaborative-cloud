@@ -5,7 +5,7 @@ import lombok.Getter;
 /**
  * @author zjh
  * @version 1.0
- * 空间类型枚举
+ * 空间级别枚举
  */
 @Getter
 public enum SpaceLevelEnum {
